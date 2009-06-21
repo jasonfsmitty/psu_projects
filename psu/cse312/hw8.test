@@ -1,0 +1,153 @@
+
+
+*	ENTER YOUR TITLE BLOCK HERE
+
+
+************************************************************************
+* Prefix file to CSE 312.1 homework 8 program.
+* V4.1  03March2000
+*****************************************************************************
+* System initialization parameters:
+		org	0		; initial system stack pointer and
+		dc.l	$10000,$1000	; initial program counter
+		org	$10
+		dc.l	$e00		; initialize "illegal" inst. vector
+		org	$e00		; illegal instruction start here
+goon:		nop			; illegal instruction definition:
+		bra	goon		; //////// CPU idling ////////
+		org	$70
+		dc.l	$f00		; init. level 4 auto interrupt vector
+		org	$f00
+hoon:		nop			; level 4 interrupt occured
+		bra	hoon		; <<< interrupt 4 occured >>>
+		org	$80
+		dc.l	init_duart	; TRAP#0: initialize serial port driver
+		dc.l	key_ck_a	; TRAP#1: check keyboard
+		dc.l	gchar_a		; TRAP#2: get character
+		dc.l	pchar_a		; TRAP#3: put character
+*************************************************************************
+* M68681 Dual Serial Port constants
+duart:		equ	$00020000	; M68681 Dual Serial Port base addr.
+mr1a:		equ	1		; mode register 1
+mr2a		equ	1		; mode register 2
+sra:		equ	3		; status register
+csra:		equ	3		; clock select register
+cra:		equ	5		; command register
+rba:		equ	7		; rx buffer register, serial in
+tba:		equ	7		; tx buffer register, data out
+ipcr:		equ	9		; input port change register
+acr:		equ	9		; auxiliary control register
+isr:		equ	11		; interrupt status register
+imr:		equ	11		; interrupt mask register
+mr1b:		equ	17		;  register for port B
+mr2b:		equ	17		;  register for port B
+srb:		equ	19		;  register for port B
+csrb:		equ	19		;  register for port B
+crb:		equ	21		;  register for port B
+rbb:		equ	23		;  register for port B
+tbb:		equ	23		;  register for port B
+ivr:		equ	25		; ivterrupt vector register
+txrdy:		equ	2
+rxrdy:		equ	0
+*-------------------------------------------------------------------
+* Serial I/O routines
+*-------------------------------------------------------------------	
+* name: 	init_duart
+* function:	M68681 Dual Serial Port initialize subroutine
+* input: 	<none>
+* output:	<none>
+* registers:	A0
+* 
+		org	$400		; DUART init. program
+init_duart:	lea	duart,a0
+		move.b	#$80,acr(a0)	; select baud-rate set 1
+		move.b	#$cc,csra(a0)	; set both rx and tx speed to 19.2k
+		move.b	#$cc,csrb(a0)	; set both rx and tx speed to 19.2k
+		move.b	#$02,mr1a(a0)	; set port A to 7 bit, even parity,
+*                                        ;    1 stop bit, rxrts enabled.
+		move.b	#$02,mr1b(a0)	; set port B to 7 bit, even parity,
+*                                        ;    1 stop bit, rxrts enabled.
+		move.b	#$07,mr2a(a0)	; select normal operation mode, enable
+*					; txrtx, txcts, 1 stop bit
+		move.b	#$07,mr2b(a0)	; select normal operation mode, enable
+*					; txrtx, txcts, 1 stop bit
+		move.b	#$05,cra(a0)	; enable port A tx and rx
+		move.b	#$05,crb(a0)	; enable port B tx and rx
+		move.b	#$00,imr(a0)	; disable interrupt
+		move.b	#$01,ivr(a0)	; disable interrupt
+		rte
+********************************************************************
+* name: 	pchar_a
+* function:	transmit a byte of data to serial port A
+* input: 	D0, data to send
+* output:	<none>
+* registers:	A0,D1
+* 
+pchar_a:	movem.l	d1/a0,-(sp)	; transmit a byte data in d0
+		lea	duart,a0	;    to the serial port A.
+opoll_a:	move.b	sra(a0),d1
+		btst	#txrdy,d1
+		beq	opoll_a
+		move.b	d0,tba(a0)
+		movem.l	(sp)+,d1/a0
+		rte
+********************************************************************
+* name: 	gchar_a
+* function:	get character from serial port A subroutine
+* input: 	<none>
+* output:	D0, received character
+* registers:	A0,D0,D1
+* 
+gchar_a:	movem.l	d1/a0,-(sp)	; receive a byte date from the
+		lea	duart,a0	;    serial port A to d0
+ipoll_a:	move.b	sra(a0),d1
+		btst	#rxrdy,d1
+		beq	ipoll_a
+		move.b	rba(a0),d0
+		trap	#3		; echo print using trap#3
+		cmp.b	#$0d,d0		; end of line check
+		bne	e_gchar_a
+		move.b	#$0a,d0		; print line-feed
+		trap	#3		; pchar_a is trap#3
+		move.b	#$0d,d0
+e_gchar_a:	movem.l	(sp)+,d1/a0
+		rte
+********************************************************************
+* name: 	key_ck_a
+* function:	check serial port A for character subroutine
+* input: 	<none>
+* output:	D0, received character
+* registers:	A0,D0,D1
+* 
+key_ck_a:	movem.l	d1/a0,-(sp)	; Check if any key pressed
+		lea	duart,a0	;    serial port A to d0
+		clr.l	d0		; d0=0 if no key pressed.
+		move.b	sra(a0),d1
+		btst	#rxrdy,d1
+		beq	e_key_ck_a
+		moveq	#1,d0		; d0=1 if a key pressed.
+e_key_ck_a:	movem.l	(sp)+,d1/a0
+		rte
+******************************************************************************
+*
+		org	$8000
+*
+*   IF YOU NEED MEMORY SPACE, RESERVE THEM HERE.
+*
+
+******************************************************************************
+*		
+		org	$1000		; Main program start here
+start:		trap	#0		; initialize serial port driver
+* 
+*   ENTER YOUR HW7 PROGRAM HERE!
+* 
+
+		illegal			; Main program ends here
+*
+*   PUT YOUR SUBROUTINES HERE!
+*
+
+
+* --------------------------------------------------------------------
+		end			; end of file
