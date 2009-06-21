@@ -1,0 +1,36 @@
++-------------------------------+
+|								|
+|	TODO List......				|
+|								|
++-------------------------------+
+(first date is when it was posted, second date is when it was completed )
+
+*	(4-20) 
+	Add debugging support to files:
+		- linklist2.h		(4-21)
+		- myString.h/cpp	(N/A  4-21)
+		- proj_db.h		
+
+*	(4-20)
+	Create and implement user interface for main console
+
+*	(4-20)
+	Setup all global variables
+
+*	(4-20)(4-21)
+	Finish proj_db.h
+
+*	(4-20)
+	Actually implement the two different cut detection algorithms!!
+
+*	(4-20)
+	Optimize, optimize, optimize!!!
+
+*	(4-20)
+	Write stupid paper (don't forget about paper for Project 4 and fixing proj 4 too!!)
+
+*	(4-21)
+	Added commented lines to split up class files.
+	Attempted to compile to check for syntex errors, all syntax errors fixed.
+	Added #pragma's to the header files to print out messages telling of the
+	  debug state for each header file.

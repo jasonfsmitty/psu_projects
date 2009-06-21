@@ -1,0 +1,1089 @@
+/*----------------------------------------------------------------------------------+
+	Jason F Smith
+	CSE 486   Project 2 - Edge detection.
+
+	Main implementation file for the project.  Requires GLUT to compile (use
+	provided makefile or the MS Visual C++ workspace under Windows)
+ +----------------------------------------------------------------------------------*/
+#if defined( _WIN32 )
+#	include "glut.h"
+#else // we're in 304 Hammond, which has GLUT installed!
+#include <GL/glut.h>
+#endif
+
+#include <fstream.h>
+#include <iostream.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <math.h>
+
+#include "myString.h"
+
+
+//#define SHOW_RESULTS_OF_LOG
+
+
+// Several short helper functions
+
+#define		Abs(A)		( (A)<0.0 ? -(A) : (A) )
+#define		Max(A,B)	( (A)>(B) ? (A) : (B) )
+#define		Min(A,B)	( (A)>(B) ? (B) : (A) )
+#define		SafeRelease(A)		{ if( (A) ) delete (A);  (A)=NULL; }
+
+const double ZERO_TOLERANCE= 0.00001;		// how close to zero should be considered zero?
+
+inline int Sign( float x )
+{
+	if( Abs(x)<= ZERO_TOLERANCE )
+		return 0;
+	if( x<0.0 )
+		return -1;
+	return 1;
+}
+
+///////////////////////////////////////////////////////////////////////
+//  Various enums used throughout
+
+// Enums for the menu options
+enum {
+	MENU_SEPERATER=0,
+	MENU_LOAD,
+	MENU_SAVE,
+	MENU_ZOOM_1X,
+	MENU_ZOOM_2X,
+	MENU_ZOOM_4X,
+	MENU_ZOOM_8X,
+	MENU_SET_SIGMA,
+	MENU_SET_THRESHOLD,
+	MENU_RECALCULATE,
+
+	MENU_EXIT
+};
+
+// Various states that the program can be in
+enum {
+	NORMAL_STATE=0,
+	INPUT_STATE=1
+};
+	
+/////////////////////////////////////////////////////////////////////
+// Global constants ------------------------------------------
+const int imageWidth = 256;
+const int imageHeight = 256;
+const int MAX_INPUT	= 256;
+const int IMAGE_SIZE = 256*256;
+const double e = 2.71828182846;
+
+/////////////////////////////////////////////////////////////////////
+// Global Data -----------------------------------------------
+
+int pState;			// current state of the program
+
+GLuint	origTexID=0;		// the texture object ID used to draw the original image
+GLuint	logTexID=0;		// the texture object ID used to draw the LoG image
+GLuint  facetTexID=0;		// the texture object ID used to draw the facet image
+
+// Unaltered data
+char origFile[256];
+unsigned char origData[ IMAGE_SIZE ];	// Also used to draw the original image
+float logData[ IMAGE_SIZE ];				// The results of the LoG edge detection function
+float facetData[ IMAGE_SIZE ];			// The results of the facet edge detection function
+
+// Data used to draw the images using textures
+//  This data is altered to show edges better
+unsigned char logEdges[ IMAGE_SIZE ];	// The LoG edge data
+unsigned char facetEdges[ IMAGE_SIZE ];	// The facet edge data
+
+int screenWidth;
+int screenHeight;
+
+float zoom;
+int viewX, viewY;
+int startX, startY;
+int moving;
+
+float sigma;		// for LoG
+float threshold;	// for Facet
+
+bool sigmaModified=false;
+bool thresholdModified=false;
+
+// Data for the command line input
+char inputPrompt[32];
+char inputLine[256];
+int  inputIndex;
+void (*inputCallback)( char* );
+
+/////////////////////////////////////////////////////////////////////
+// Function definitions -------------------------------------
+
+void Init( void ); 		// initialize the application
+void InitMenus( void );		// Can get fairly complex, so we'll give it it's own function
+void Cleanup( void );		// Make sure we deallocate all of the data
+void DisplayStatus( void );
+
+void GetInput( char* prompt, void (*callbackFunc)(char*) );
+
+// Image handling / edge detection functions
+void LoadImage( char* file );
+void SaveImage( char* file, unsigned char* rawData );
+void Calc_LoG( void );
+void Calc_Facet( void );
+double LoG( int x, int y ); // calculate the value at (x,y) of the mask
+double FacetApprox( int x, int y ); // approximate the Facet planer model at the pixel at (x,y)
+
+void ProcessImage( void );
+bool CreateOrigTex( void );
+bool CreateLoGTex( void );
+bool CreateFacetTex( void );
+
+void SetSigma( char* in );
+void SetThreshold( char* in );
+
+/////////////////////////////////////////////////////////////////////
+// Callback functions for GLUT -------------------------------
+void Reshape( int w, int h );		// handle window reshapes
+void Display( void );			// draw the image
+void MouseClick( int button, int state, int x, int y );
+void MouseMotion( int x, int y );
+void Keyboard( unsigned char c, int x, int y );
+
+// menuing functions
+void MainMenu( int value );
+void ZoomMenu( int value );
+
+void GLPrint( int x, int y, char* text, ... );
+void GLPrint( char* text, ... );
+
+/*******  Start of function implementations *****************************************/
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void GetInput( char* prompt, void (*callbackFunc)(char*) )
+{	
+	if( !callbackFunc )
+		return;
+	
+	pState = INPUT_STATE;
+
+	if( prompt )
+		strcpy( inputPrompt, prompt );
+	else
+		strcpy( inputPrompt, "Unknown Prompt" );
+
+	inputCallback = callbackFunc;
+	inputIndex = 0;
+	inputLine[0]=NULL;
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void SetSigma( char* in )
+{
+	sigma = StringToFloat( in );
+	sigmaModified = true;
+
+
+	if( strlen( origFile )>0 ){
+		Calc_LoG();
+		CreateLoGTex();
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void SetThreshold( char* in )
+{
+	threshold = StringToFloat( in );
+	thresholdModified = true;
+
+	
+	if( strlen( origFile )>0 ){
+		Calc_Facet();
+		CreateFacetTex();
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void GLPrint( int x, int y, char* text, ... )
+{
+	char text2[256];
+	va_list ap;
+
+	va_start( ap, text );
+		vsprintf( text2, text, ap );
+	va_end(ap);
+
+	glRasterPos2i( x, y );
+	int len=strlen( text2 );
+	for( int i=0; i<len; i++ )
+		glutBitmapCharacter( GLUT_BITMAP_HELVETICA_12, text2[i] );
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void GLPrint( char* text, ... )
+{
+	char text2[256];
+	va_list ap;
+
+	va_start( ap, text );
+		vsprintf( text2, text, ap );
+	va_end(ap);
+
+	int len=strlen( text2 );
+	for( int i=0; i<len; i++ )
+		glutBitmapCharacter( GLUT_BITMAP_HELVETICA_12, text2[i] );
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void LoadImage( char* file )
+{
+	ifstream in;
+
+	if( !file )
+		return;
+
+	in.open( file, ios::binary );
+
+	if( in.fail() ){
+		cout <<"\n Error opening file: "<<file<<endl;
+		return;
+	}
+
+	//in.read( origData, 256*256 );
+	for( long i=0; i<IMAGE_SIZE; i++ ){
+		in.read( &origData[i], 1 );
+	}
+
+	strcpy( origFile, file );
+
+	// do edge detection, create textures, etc
+	ProcessImage();
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void SaveImage( char* file, unsigned char* rawData )
+{
+	if( !file || !rawData )
+		return;
+
+	ofstream out( file, ios::binary );
+
+	if( out.fail() ){
+		cout <<"Error opening save file: "<<file<<endl;
+		return;
+	}
+
+	out.write( rawData, IMAGE_SIZE );
+	out.close();
+
+	return;
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void ProcessImage( void )
+{
+	if( origData )
+	{
+		Calc_LoG();
+		Calc_Facet();
+
+		CreateOrigTex();
+		CreateLoGTex();
+		CreateFacetTex();
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+double LoG( int x, int y )
+{
+	double x2 = x*x;
+	double y2 = y*y;
+	double s2 = sigma*sigma;
+
+	// g(x,y) = ( (x^2+y^2-2sigma^2) / (sigma^4) ) * e^-( (x^2+y^2)/(2sigma^2) )
+
+	// pow(x,y) = x^y
+
+	double exp = -( (x2+y2)*0.5 / s2 );
+
+	return ( (x2+y2-2*s2)/(s2*s2) ) * pow( e, exp );
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void Calc_LoG( void )
+{
+	double mask[7][7];
+	double total=0.0; 	// for testing purposes
+	long i, j;
+	long index;
+	int x, y;
+
+//	double adjust;
+//	int num;
+
+	float u, l, d, r, c;	// for the 4 neighbor zero crossing detection
+
+	// first, create the mask
+	for( i=0; i<7; i++ ){	// rows
+		for( j=0; j<7; j++ ){ // columns
+			mask[i][j] = LoG( i-3, j-3 );
+			total += mask[i][j];
+		}
+	}
+
+	cout <<"Sum of the mask values is: "<<total<<endl;
+
+	for( i=0; i<7; i++ ){
+		for( j=0; j<7; j++ ){
+			mask[i][j] -= total/49.0;
+		}
+	}
+
+/*
+	adjust=0.0;
+	num=0;
+	for( i=0; i<7; i++ ){
+		for( j=0; j<7; j++ ){
+			if( Sign( mask[i][j] )==1 ){
+				num++;
+			}
+		}// for j
+	}// for i
+
+	adjust = total / (double)num;
+
+	for( i=0; i<7; i++ ){
+		for( j=0; j<7; j++ ){
+			if( Sign( mask[i][j] )==1 ){
+				mask[i][j] -= adjust;
+			}
+		}// for j
+	}// for i
+
+*/
+	// compute the new mean of the mask
+
+	total = 0;
+	for( i=0; i<7; i++ ){
+		for( j=0; j<7; j++ ){
+			total += mask[i][j];
+		}
+	}
+	cout <<"The adjusted mask total is: "<<total<<endl;
+
+	memset( logData, 0, sizeof( float[IMAGE_SIZE] ) );
+
+	long startPixelIndex = ( 256*3 + 3 );
+	long endPixelIndex = (256*256) - (256*3) - 4;
+	long k;
+
+
+	for( y=3; y<253; y++ ){
+		for( x=3; x<253; x++ ){
+			index = y*256 + x;
+			total = 0.0;
+
+			for( i=-3; i<4; i++ ){
+				for( j=-3; j<4; j++ ){
+					k = index + 256*i + j;
+					total += origData[k] * mask[i+3][j+3];
+				} // for j
+			} // for i
+
+			// now that we have the value, plug it in
+
+			logData[index] = (float)total;
+		}// for x
+	}  // for y
+
+#if !defined( SHOW_RESULTS_OF_LOG )
+	// calculate the normal edges by the zero crossings??
+
+	memset( logEdges, 0, sizeof( unsigned char[IMAGE_SIZE] ) );
+
+	for( y=3; y<253; y++ ){
+		for( x=3; x<253; x++ ){
+			index = 256*y+x;
+			
+			// determine if this pixel is an edge pixel
+/*
+	Edge detection decision method:
+
+	method 1
+	for everypixel, test if any 4-neighbors cause
+	a zero-crossing.  if so, set the pixel with
+	the least magnitude as the edge.
+*/
+			// get the 4-neighbors
+			//u = logData[ index-256 ];
+			d = logData[ index+256 ];
+			//l = logData[ index-1 ];
+			r = logData[ index+1 ];
+
+			c = logData[ index ];
+
+			if( ( Sign(c)==-Sign(u) && Abs(c)<Abs(u) ) ||
+				( Sign(c)==-Sign(d) && Abs(c)<Abs(d) ) ||
+				( Sign(c)==-Sign(l) && Abs(c)<Abs(l) ) ||
+				( Sign(c)==-Sign(r) && Abs(c)<Abs(r) )    ){
+
+				logEdges[index] = 255;
+			} else {
+				logEdges[index] = 0;
+			}
+
+		}// for x
+	}  // for y
+#endif
+
+	sigmaModified=false;
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+double FacetApprox( int x, int y)
+{
+	if( x<1 || x>254 || y<1 || y>254 )
+		return 0.0;
+
+	double g;
+	double k1=0.0;
+	double k2=0.0;
+	double k3=0.0;
+	double data[3][3];
+	int i, j;
+//	long index;
+
+	// grap the data so it's easier to work with
+	for( i=-1; i<2; i++ ){
+		for( j=-1; j<2; j++ ){
+			//index = y*256 + x + i*256 + j;
+			data[i+1][j+1] = origData[ 256*(y+i) + x + j ];
+		}
+	}
+
+	// solve for k1
+	//  k1 = (sum data)/9
+	// solve for k2
+	//   k2 = (sum of columns j=-1 and j=1)/6
+	// solve for k3
+	//   k3 = (sum of rows i=-1 and i=1)/6
+	k1=k2=k3=0.0;
+	for( i=0; i<3; i++ ){
+		for( j=0; j<3; j++ ){
+			k1 += data[i][j];
+			if( j!=1 )
+				k2 += data[i][j] * (float)(j-1);
+			if( i!=1 )
+				k3 += data[i][j] * (float)(i-1);
+		}// for j
+	}// for i
+
+	// adjust values
+	k1 /= 9.0;
+	k2 /= 6.0;
+	k3 /= 6.0;
+
+	// this is the equation of the plane!!
+	// k1 + k2*x + k3*y
+
+	// f(x,y) = k1 + k2*x +k3*y
+	// f'/dx = k2
+	// f'/dy = k3
+	
+	g = sqrt( (k2*k2+k3*k3) );
+
+	return g;
+}
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void Calc_Facet( void )
+{
+	int i, j;
+
+	thresholdModified = false;
+
+	// Compute all of the gradient values
+	for( i=0; i<256; i++ ){
+		for( j=0; j<256; j++ ){
+
+			// while we're at it, check if it's an edge!!
+			if( (facetData[i*256+j]=FacetApprox( j, i )) > threshold ){
+				facetEdges[ i*256+j ] = 255;
+			} else {
+				facetEdges[ i*256+j ] = 0;
+			}
+
+		}// for j
+	} // for i
+
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+bool CreateOrigTex( void )
+{
+	unsigned char temp[ IMAGE_SIZE*3 ];
+
+	if( origTexID ){
+		glDeleteTextures( 1, &origTexID );
+		origTexID = 0;
+	}
+
+	for( long i=0; i<IMAGE_SIZE; i++ ){
+		temp[i*3] = temp[i*3+1] = temp[i*3+2] = origData[i];
+	}
+
+	glGenTextures( 1, &origTexID );
+	glBindTexture( GL_TEXTURE_2D, origTexID );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, temp );
+
+	return true;
+
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+bool CreateLoGTex( void )
+{
+	unsigned char temp[ IMAGE_SIZE*3 ];
+
+	if( logTexID ){
+		glDeleteTextures( 1, &logTexID );
+		logTexID=0;
+	}
+
+#if defined( SHOW_RESULTS_OF_LOG )
+	for( long i=0; i<IMAGE_SIZE; i++ ){
+		if( Sign(logData[i]) == 0 ){
+			temp[i*3]=0; temp[i*3+1]=0; temp[i*3+2]=0;
+		} else if( logData[i]<0.0f ){
+			temp[i*3]=0; temp[i*3+1]=255; temp[i*3+2]=0;
+		} else {
+			temp[i*3]=255; temp[i*3+1]=0; temp[i*3+2]=0;
+		}
+	}
+#else // do normal edge detection stuff
+
+	for( long i=0; i<IMAGE_SIZE; i++ ){
+		temp[i*3] = temp[i*3+1] = temp[i*3+2] = logEdges[i];
+	}
+
+#endif
+
+	glGenTextures( 1, &logTexID );
+	glBindTexture( GL_TEXTURE_2D, logTexID );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, temp );
+
+	return true;
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+bool CreateFacetTex( void )
+{
+	unsigned char temp[ IMAGE_SIZE*3 ];
+
+	if( facetTexID ){
+		glDeleteTextures( 1, &facetTexID );
+		facetTexID = 0;
+	}
+
+	for( long i=0; i<IMAGE_SIZE; i++ ){
+		temp[i*3] = temp[i*3+1] = temp[i*3+2] = facetEdges[i];
+	}
+
+	glGenTextures( 1, &facetTexID );
+	glBindTexture( GL_TEXTURE_2D, facetTexID );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, temp );
+
+	return true;
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void Reshape( int w, int h )
+{
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
+	
+	screenWidth = w;
+	screenHeight = h;
+
+	glViewport( 0, 0, screenWidth-1, screenHeight-1 );
+	gluOrtho2D( 0, screenWidth-1, screenHeight-1, 0 );
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void Display( void )
+{
+	float texStartX = ((float)viewX)/255.0f;
+	float texStartY = ((float)viewY)/255.0f;
+
+	if( zoom < 1.0f )
+		zoom = 1.0f;
+
+	float texEndX = texStartX + 1.0f/zoom;
+	float texEndY = texStartY + 1.0f/zoom;
+	
+	// Make sure not off the edge of the picture
+	if( texEndX>1.0f ){
+		texStartX -= texEndX-1.0f;
+		texEndX = 1.0f;
+	}
+	if( texEndY>1.0f ){
+		texStartY -= texEndY-1.0f;
+		texEndY = 1.0f;
+	}
+
+
+	glClear( GL_COLOR_BUFFER_BIT );
+	glEnable( GL_TEXTURE_2D );
+	glColor3f( 1.0f, 1.0f, 1.0f );
+	
+	if( origTexID ){
+		glBindTexture( GL_TEXTURE_2D, origTexID );
+
+		glBegin( GL_TRIANGLE_STRIP );
+			glTexCoord2f( texStartX, texStartY );
+			glVertex2i( 0, 0 );
+			
+			glTexCoord2f( texStartX, texEndY );
+			glVertex2i( 0, screenHeight/2 );
+
+			glTexCoord2f( texEndX, texStartY );
+			glVertex2i( screenWidth/2, 0 );
+
+			glTexCoord2f( texEndX, texEndY );
+			glVertex2i( screenWidth/2, screenHeight/2 );
+		glEnd();
+	}
+
+	if( logTexID ){
+		// Draw the LoG picture
+		glBindTexture( GL_TEXTURE_2D, logTexID );
+
+		glPushMatrix();
+
+		glTranslatef( screenWidth/2, 0, 0 );
+		glBegin( GL_TRIANGLE_STRIP );
+			glTexCoord2f( texStartX, texStartY );
+			glVertex2i( 0, 0 );
+			
+			glTexCoord2f( texStartX, texEndY );
+			glVertex2i( 0, screenHeight/2 );
+
+			glTexCoord2f( texEndX, texStartY );
+			glVertex2i( screenWidth/2, 0 );
+
+			glTexCoord2f( texEndX, texEndY );
+			glVertex2i( screenWidth/2, screenHeight/2 );
+		glEnd();
+		glPopMatrix();
+	}
+
+
+	if( facetTexID ){
+		// Draw the facet picture
+		glBindTexture( GL_TEXTURE_2D, facetTexID );
+
+		glPushMatrix();
+		glTranslatef( 0, screenHeight/2, 0 );
+		glBegin( GL_TRIANGLE_STRIP );
+			glTexCoord2f( texStartX, texStartY );
+			glVertex2i( 0, 0 );
+			
+			glTexCoord2f( texStartX, texEndY );
+			glVertex2i( 0, screenHeight/2 );
+
+			glTexCoord2f( texEndX, texStartY );
+			glVertex2i( screenWidth/2, 0 );
+
+			glTexCoord2f( texEndX, texEndY );
+			glVertex2i( screenWidth/2, screenHeight/2 );
+		glEnd();
+		glPopMatrix();
+	}
+
+
+	// Display some current state information
+	DisplayStatus();
+
+	glutSwapBuffers();
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void DisplayStatus( void )
+{
+/*
+	...should look something like this:
+
+	--- Info ---
+
+	Original Image: (filename here)
+	
+	FoG Status: (not implemented / error / complete )
+	Facet Status: (not implemented / error / complete )
+
+	Zoom: ( 1x/2x/4x/8x )
+*/
+	glPushMatrix();
+
+		int line=0;
+		int step = 15;
+
+		glDisable( GL_TEXTURE_2D );
+
+		// just to make the alignment and stuff easier
+		glTranslatef( screenWidth/2+20, screenHeight/2+20, 0 );
+
+		GLPrint( 0, step*(line++), "    --- Info ---" );
+
+		line++;
+
+		GLPrint( 0, step*(line++), "Image File: " );
+		if( origFile[0]!=NULL )
+			GLPrint( origFile );
+		else 
+			GLPrint( "(no image loaded)" );
+
+		GLPrint( 0, step*(line++), "Image Status: " );
+		if( origTexID )
+			GLPrint( "loaded" );
+		else
+			GLPrint( "not loaded" );
+		
+		line++;
+
+		GLPrint( 0, step*(line++), "LoG Status: " );
+		if( sigmaModified )
+			GLPrint( "out-dated" );
+		else
+			GLPrint( "sorta working" );
+
+		GLPrint( 0, step*(line++), "Sigma: " );
+		GLPrint( "%3.2f", sigma );
+
+		line++;
+
+		GLPrint( 0, step*(line++), "Facet Status: " );
+		if( thresholdModified )
+			GLPrint( "out-dated" );
+		else
+			GLPrint( "might be working?" );
+	
+		GLPrint( 0, step*(line++), "Threshold: " );
+		GLPrint( "%3.2f", threshold );
+
+		line++;
+
+		GLPrint( 0, step*(line++), "Zoom: " );
+		char zText[3] = "?x";
+		zText[0] = (char)zoom + '0';
+		GLPrint( zText );
+
+
+		//TODO: ADD IN INPUT LINE IF IN INPUT_STATE!!
+		if( pState==INPUT_STATE ){
+			inputLine[inputIndex]=NULL;
+
+			line++;
+
+			GLPrint( 0, step*(line++), inputPrompt );
+			GLPrint( 0, step*(line++), ">" );
+			GLPrint( inputLine );
+			GLPrint( "_" );
+		}
+
+	glPopMatrix();
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void MouseClick( int button, int state, int x, int y )
+{
+	if( pState==INPUT_STATE )
+		pState=NORMAL_STATE;
+
+	if( button==GLUT_LEFT_BUTTON ){
+		if( state==GLUT_DOWN ){
+			moving = 1;
+			startX = x;
+			startY = y;
+		} else {
+			moving = 0;
+		}
+	}
+
+	glutPostRedisplay();
+}
+
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void MouseMotion( int x, int y )
+{
+	if( moving ){
+		viewX += x-startX;
+		viewY += y-startY;
+
+		if( viewX < 0 )		viewX = 0;
+		if( viewX >255 )	viewX = 255;
+		if( viewY < 0 )		viewY = 0;
+		if( viewY > 255 )	viewY = 255;
+
+		startX = x;
+		startY = y;
+	}
+
+	glutPostRedisplay();
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void Keyboard( unsigned char c, int x, int y )
+{
+
+	if( pState==INPUT_STATE ){
+		// capture the input
+
+		// process special buttons
+		if( c == 13 ){ 
+			// Enter was pressed!  time to go to work!!
+			pState=NORMAL_STATE;
+			inputLine[inputIndex]=NULL;
+			inputCallback( inputLine );
+		} else if( c == 27 ){// ESCAPE
+			pState=NORMAL_STATE;
+		} else if( c == 8 ){ // backspace key
+			if( inputIndex>0 )
+				inputIndex--;
+		} else { // default processing, enter it into the string
+			if( inputIndex+1<MAX_INPUT ){
+				inputLine[inputIndex++] = (char)c;
+			}
+		}
+	} else { // normal state
+		switch( c ){
+			case 27: // escape
+				Cleanup();
+				exit(0);
+			
+			default:
+				break;
+		};
+	}
+
+	glutPostRedisplay();
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+void MainMenu( int value )
+{
+	//char input[256];
+	char* str=NULL;
+
+	if( pState==INPUT_STATE )
+		pState=NORMAL_STATE;
+
+	switch( value )
+	{
+		case MENU_LOAD:
+			GetInput( "Enter image filename:", LoadImage );
+#if !defined( _WIN32 ) // then in 304 Hammond...
+			str = "../../../cg486/images/";
+			strcpy( inputLine, str );
+			inputIndex = strlen( str );
+#endif
+			break;
+
+		case MENU_SAVE:
+			break;
+
+		case MENU_SET_SIGMA:
+			GetInput( "Enter sigma:", SetSigma );
+			break;
+
+		case MENU_SET_THRESHOLD:
+			GetInput( "Enter threshold:", SetThreshold );
+			break;
+
+		case MENU_RECALCULATE:
+			if( strlen( origFile )>0 )
+				LoadImage( origFile );
+			break;
+
+		case MENU_EXIT:
+			Cleanup();
+			exit(0);
+	};
+
+	glutPostRedisplay();
+}
+
+/////////////////////////////////////////////////////////////////////
+//   ZoomMenu - set the different zoom values
+/////////////////////////////////////////////////////////////////////
+void ZoomMenu( int value )
+{
+	if( pState==INPUT_STATE )
+		pState=NORMAL_STATE;
+
+	switch( value ){
+		case MENU_ZOOM_1X:
+			zoom = 1.0f;
+			break;
+		case MENU_ZOOM_2X:
+			zoom = 2.0f;
+			break;
+		case MENU_ZOOM_4X:
+			zoom = 4.0f;
+			break;
+		case MENU_ZOOM_8X:
+			zoom = 8.0f;
+			break;
+		default:
+			zoom = 1.0f;
+			break;
+	};
+
+	glutPostRedisplay();
+}
+
+/////////////////////////////////////////////////////////////////////
+//   Init() - Initialize the window, menus, etc.
+/////////////////////////////////////////////////////////////////////
+void Init( void )
+{
+	// Setup the window
+	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA );
+	glutInitWindowSize( 500, 500 );
+	// glutInitWindowPosition( 200, 200 );
+	glutCreateWindow( "CSE 486 P2 - Edge Detection by JFS" );
+
+	// Add in our event handlers
+	glutReshapeFunc( Reshape );
+	glutDisplayFunc( Display );
+	glutMouseFunc( MouseClick );
+	glutMotionFunc( MouseMotion );
+	glutKeyboardFunc( Keyboard );
+
+	glClearColor( 0.0f, 0.0f, 0.5f, 1.0f );
+
+	// Initialize all of the menus and attach to the right
+	//   mouse button
+	InitMenus();
+
+	origTexID = logTexID = facetTexID = 0;
+	pState = NORMAL_STATE;
+	sigma = 1.0f;
+	threshold = 15.0f;
+
+	Reshape( 500, 500 );
+
+	glEnable( GL_TEXTURE_2D );
+	glDisable( GL_CULL_FACE );
+}
+
+
+/////////////////////////////////////////////////////////////////////
+//   InitMenus - Initialize and setup all of the menu stuff
+/////////////////////////////////////////////////////////////////////
+void InitMenus( void )
+{
+	// Create the main menu
+
+	int z_menu = glutCreateMenu( ZoomMenu );
+	glutAddMenuEntry( "1x", MENU_ZOOM_1X );
+	glutAddMenuEntry( "2x", MENU_ZOOM_2X );
+	glutAddMenuEntry( "4x", MENU_ZOOM_4X );
+	glutAddMenuEntry( "8x", MENU_ZOOM_8X );
+
+	glutCreateMenu( MainMenu );
+	glutAddMenuEntry( "EdgeDetector V0.1", MENU_SEPERATER );
+	glutAddMenuEntry( "  ", MENU_SEPERATER );
+	glutAddMenuEntry( "Load Image...", MENU_LOAD );
+//	glutAddMenuEntry( "Save Image", MENU_SAVE );
+	glutAddMenuEntry( "Set Sigma...", MENU_SET_SIGMA );
+	glutAddMenuEntry( "Set Threshold...", MENU_SET_THRESHOLD );
+	glutAddMenuEntry( "Recalculate Edges", MENU_RECALCULATE );
+	glutAddSubMenu( "Zoom", z_menu );
+	glutAddMenuEntry( "   ", MENU_SEPERATER );
+	glutAddMenuEntry( "Exit", MENU_EXIT );
+
+	glutAttachMenu( GLUT_RIGHT_BUTTON );
+}
+
+
+/////////////////////////////////////////////////////////////////////
+//  Cleanup all of the dynamic data
+/////////////////////////////////////////////////////////////////////
+void Cleanup( void )
+{
+	if( origTexID )
+		glDeleteTextures( 1, &origTexID );
+	if( logTexID )
+		glDeleteTextures( 1, &logTexID );
+	if( facetTexID )
+		glDeleteTextures( 1, &facetTexID );
+}
+
+
+/////////////////////////////////////////////////////////////////////
+//   main() - where everything starts
+////////////////////////////////////////////////////////////////////
+int main( int argc, char **argv )
+{
+	glutInit( &argc, argv );
+	
+	// Do our initialization stuff, window, menus, etc.
+	Init();
+
+	glutMainLoop();
+
+	return 0; // never reached!!
+}
+
+
+/*******/
+/* EOF */
+/*******/

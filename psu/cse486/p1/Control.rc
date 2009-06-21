@@ -1,0 +1,128 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAIN_DIALOG DIALOG DISCARDABLE  0, 0, 296, 162
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Jason F Smith     CSE 486 - Project 1"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Exit",IDEXIT,237,32,52,18
+    GROUPBOX        "Input File:",IDC_STATIC,7,7,221,41
+    EDITTEXT        IDC_EDIT_FILENAME,13,17,146,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "...",IDC_OPENDIALOG,165,17,23,11
+    LTEXT           "Width:",IDC_STATIC,14,33,22,9
+    EDITTEXT        IDC_WIDTH,41,30,25,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Height:",IDC_STATIC,74,33,23,9
+    EDITTEXT        IDC_HEIGHT,99,30,25,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Foreground value:",IDC_STATIC,133,32,59,10
+    EDITTEXT        IDC_FOREGROUND,194,30,25,12,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Load",IDC_LOADBUTTON,196,17,23,11
+    GROUPBOX        "Robot Data",IDC_STATIC,7,51,94,104
+    LTEXT           "Size (PxP), P:",IDC_STATIC,14,67,49,12
+    EDITTEXT        IDC_ROBOTSIZE,66,64,26,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Start X:",IDC_STATIC,14,81,25,12
+    EDITTEXT        IDC_STARTX,66,80,26,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Start Y:",IDC_STATIC,14,95,25,12
+    EDITTEXT        IDC_STARTY,65,95,26,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "End X:",IDC_STATIC,13,113,25,12
+    EDITTEXT        IDC_ENDX,65,111,26,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "End Y:",IDC_STATIC,13,127,25,12
+    EDITTEXT        IDC_ENDY,65,127,26,12,ES_AUTOHSCROLL | ES_NUMBER
+    GROUPBOX        "Display",IDC_STATIC,108,51,181,104
+    PUSHBUTTON      "Original Map",IDC_DISPLAYORIGINAL,118,63,77,17
+    PUSHBUTTON      "Medial Ax'es Only",IDC_DISPLAYMEDIAL,202,62,74,17
+    PUSHBUTTON      "Original with Medial Ax'es Overlay",
+                    IDC_DISPLAYMEDIALOVERLAY,118,85,158,17
+    PUSHBUTTON      "Robot Path",IDC_DISPLAYPATH,118,107,77,17
+    PUSHBUTTON      "Save Current Display Image As...",IDC_DISPLAYSAVE,118,
+                    129,158,17
+    PUSHBUTTON      "Reset",IDC_RESET,237,7,52,18
+    PUSHBUTTON      "Close Window",IDC_DISPLAYCLOSE,204,107,72,17
+    PUSHBUTTON      "Process",IDC_PROCESS_ROBOT,17,143,72,12
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_MAIN_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 289
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 155
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

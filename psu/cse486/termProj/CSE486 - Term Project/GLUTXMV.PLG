@@ -1,0 +1,32 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: glutxmv - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "D:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP55.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/glutxmv.pdb" /debug /machine:I386 /out:"Debug/glutxmv.exe" /pdbtype:sept 
+".\Debug\cse486_mpeglib.obj"
+".\Debug\glutxmv.obj"
+]
+Creating command line "link.exe @D:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP55.tmp"
+<h3>Output Window</h3>
+Linking...
+cse486_mpeglib.obj : error LNK2001: unresolved external symbol "void __cdecl OpenMpegForStats(char *,struct ImageDesc *)" (?OpenMpegForStats@@YAXPADPAUImageDesc@@@Z)
+cse486_mpeglib.obj : error LNK2001: unresolved external symbol "void __cdecl CloseMPEG(void)" (?CloseMPEG@@YAXXZ)
+cse486_mpeglib.obj : error LNK2001: unresolved external symbol "int __cdecl SeekFrame(int,char *)" (?SeekFrame@@YAHHPAD@Z)
+cse486_mpeglib.obj : error LNK2001: unresolved external symbol "unsigned char * __cdecl GetCurRgbBuffer(void)" (?GetCurRgbBuffer@@YAPAEXZ)
+cse486_mpeglib.obj : error LNK2001: unresolved external symbol "int __cdecl GetDCTBufferC(short * *,short * *,int *,int *,int *,char * *,int *,int *,int * *,int * *,int * *,int * *)" (?GetDCTBufferC@@YAHPAPAF0PAH11PAPAD11PAPAH333@Z)
+Debug/glutxmv.exe : fatal error LNK1120: 5 unresolved externals
+Error executing link.exe.
+
+
+
+<h3>Results</h3>
+glutxmv.exe - 6 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
