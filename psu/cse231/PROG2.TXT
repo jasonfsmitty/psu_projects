@@ -1,0 +1,187 @@
+/*
+
+	Jason F. Smith
+	4588
+	
+	CSE 231 HW #2
+	
+	This program computes the greatest common factor of two
+	numbers, x and y.
+	
+	I am aware that this program was due quite a long time ago.
+	However, I talked to Christman and he told me that I could 
+	still write it and hand it in to get some points.
+*/
+
+	define( `x_val', 60 )
+	define( `y_val', 39 )
+	
+	define( `x_r', l0 )
+	define( `y_r', l1 )
+	
+	.global main
+main:
+	save 	%sp, -64, %sp
+	mov	y_val, %y_r	! set the y value
+	mov 	x_val, %x_r	! set the x value
+do_loop:
+	mov	%x_r, %o0	! move x in for the call
+	call	.rem		! same as modulus operation
+	mov	%y_r, %o1	!   remainder is in %o0 when done
+	
+	tst 	%o0		! test the remainder to see if zero
+	mov	%y_r, %x_r	! else, x = y
+	bne	do_loop		! go back and try again
+	mov	%o0, %y_r	!       y = rem
+	
+end_prog:	! the answer is in x_r
+	mov	1, %g1		! prepare for...
+	ta	0		! ...system trap to end program
+	
+	
+	
+	
+	
+	
+!=============================================================================
+		Copy of the gdb session.
+		I added in comments to more easily jump to the answer.
+!=============================================================================
+
+haskell 21% gdb prog2
+GNU gdb 19981224
+Copyright 1998 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "sparc-sun-solaris2.7"...
+(gdb) b *& do_loop
+Breakpoint 1 at 0x10aac
+(gdb) b *& end_prog
+Breakpoint 2 at 0x10ac8
+(gdb) display $l0
+(gdb) display $l1
+(gdb) r
+Starting program: /home/abyss.4/jassmith/prog2 
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 39
+1: $l0 = 60
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 21
+1: $l0 = 39
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 18
+1: $l0 = 21
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 3
+1: $l0 = 18
+(gdb) 
+Continuing.
+
+Breakpoint 2, 0x10ac8 in end_prog ()
+2: $l1 = 0
+1: $l0 = 3		! Here's the answer for x=60, y=39
+(gdb) 	
+Continuing.
+
+Program exited normally.
+(gdb) r
+Starting program: /home/abyss.4/jassmith/prog2 
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 39
+1: $l0 = 60
+(gdb) set $l1=40
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 20
+1: $l0 = 40
+(gdb) 
+Continuing.
+
+Breakpoint 2, 0x10ac8 in end_prog ()
+2: $l1 = 0
+1: $l0 = 20            ! here's the answer for x=60, y=40
+(gdb) 
+Continuing.
+
+Program exited normally.
+(gdb) r
+Starting program: /home/abyss.4/jassmith/prog2 
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 39
+1: $l0 = 60
+(gdb) set $l1=41
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 19
+1: $l0 = 41
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 3
+1: $l0 = 19
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 1
+1: $l0 = 3
+(gdb) 
+Continuing.
+
+Breakpoint 2, 0x10ac8 in end_prog ()
+2: $l1 = 0
+1: $l0 = 1            ! here's the answer for x=60, y=41
+(gdb) 
+Continuing.
+
+Program exited normally.
+(gdb) r
+Starting program: /home/abyss.4/jassmith/prog2 
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 39
+1: $l0 = 60
+(gdb) set $l1=42
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 18
+1: $l0 = 42
+(gdb) 
+Continuing.
+
+Breakpoint 1, 0x10aac in do_loop ()
+2: $l1 = 6
+1: $l0 = 18
+(gdb) 
+Continuing.
+
+Breakpoint 2, 0x10ac8 in end_prog ()
+2: $l1 = 0
+1: $l0 = 6		! Here's the answer for x=60, y=42
+(gdb) 
+Continuing.
+
+Program exited normally.
+(gdb) q
+haskell 22% 
