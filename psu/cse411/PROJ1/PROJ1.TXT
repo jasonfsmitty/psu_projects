@@ -1,0 +1,71 @@
+Jason F. Smith 4588
+Mike Schreiber 5259
+
+CSE 411 Project 1 Report
+February 18, 2000
+
+NOTE:   We included this with our project files on the turn in day due to the inclement weather incase this paper was still required to be handed in today.  We still plan to hand in a hard copy of this at the next class.
+
+
+
+	In this project, we knew we had to keep track of a ucontext_t for each of the threads in the program.  Along with the context of each thread, there was the consideration of the priority and the unique ID which were to be assigned to each thread.  A structure was created to store this data, called a PCB (standing for Program Control Block).  Somehow we needed to keep track of the PCBs used by the thread library, and the class PCB_tracker arose to make things easier for us inside of our thread library functions.  
+	The PCB structure is fairly simple.  It has a ucontext_t pointer, which to be of any use, memory for a ucontext_t must be allocated and the pointer set to it.  Only after an initialization of the memory with getcontext() can the ucontext_t be used.  We decided to have a pointer in the structure rather than the ucontext_t itself due to the constant need of the swapcontext, getcontext, and makecontext functions to have pointers as parameters.  
+	The class PCB_tracker does not directly deal with the PCB's, but rather pointers to them.  The class has several basic functions, such as add_PCB, which adds the PCB pointer passed to it into the tracker for safekeeping.  It also has a get_next function, which gets the next PCB according to priority (this is where the scheduling takes place).  The clear_all function simply deletes the PCBs inside the tracker.  Finally, the get_size and the is_empty functions finish up this PCB_tracker class.
+	The way that the PCBs are maintained inside of the PCB_tracker is by the means of a multi-leveled queue.  There is one level for each priority of the system (in our case, 0-10, so 11 priority levels) and is implemented as an array for ease of interaction with the priority for the threads.  Each level is a simple queue.  We wrote the queue to be very small and simple (it is contained in jfsqueue.h).  The only other variable in the PCB_tracker is the integer size, which is the number of PCBs currently being maintained by the PCB_tracker.
+The add_PCB function takes a pointer to a PCB structure as it's argument and enqueues it onto the appropriate priority queue and increases the size of the PCB tracker.
+	The get_next function performs the round robin scheduling with priority.  It basically checks each priority from the top down until it finds a level with something in it.  The first PCB pointer is then dequeued off of its respective queue, and the pointer is returned by the function.  If there is an error, NULL is returned instead.
+	There are also three other functions:  get_size() which returns the variable size;  is_empty(), which returns true if the size is zero, and false otherwise; and a function called clear_all().  This last function was designed to delete the allocated memory of all of the PCB structures that are being maintained by the PCB_tracker.  
+
+Global Variables
+
+	There are four variables that are used by the thread library that are declared globally within the implementation file.  They are: a pointer to a PCB_tracker (pcb_ready), a pointer to the current PCB (current), an integer (main_id) which allows the library to identify the thread that initialized the library.  Also a variable is kept so that each thread can be assigned a unique ID value, based on how many threads have been initialized ( next_thread_id ).
+
+I.	Initializing the library.
+
+	Initialization of the thread library is done by the t_init function.  It first checks to see if the library has already been initialized by the pcb_ready pointer.  If not, it creates a new PCB_tracker, pointed by pcb_ready.  Being the first thread, it has to initialize the currently running thread's PCB.  It allocates a new PCB in memory, set to the "current" pointer.  It sets the priority, the ID, and it creates a new ucontext_t to save the thread's context at a future time.  It initializes that context with getcontext().  We then setup the alarm callback function, signal_handler.  The function sigset() was used due to its ability to return to the interrupted function after the signal handling function returns.  Also added was the Control-C interrupt, which is useful in the test files due to the infinite loops.
+
+II	Creating a thread.
+
+	The t_create function compares the pcb_ready pointer to NULL in order to determine if the library has been initialized.  If it has been, then it continues on to create another thread.  Several arguments are passed into this function, such as: a pointer to the thread function, a value that is a parameter to the thread function, and an integer priority of that thread.  A new PCB must be created for this thread, and its priority is compared to the tolerances of the system.  If needed, the priority is moved within the set limits, and the thread's priority and ID are set in its PCB.  Next a new ucontext_t is created and initialized with getcontext(). 	The function makecontext() is used to set the thread's initial context to the function passed into t_create().
+	When creating a new thread, the current thread is pushed back onto the ready queue (pcb_ready), and the newly created thread is run immediately.  Once the context and the PCB are initialized for the new thread, the current thread is added back into the ready queue with an add_PCB(current) function call.  Before this is done, a pointer to the current context is set and kept. 	The current pointer is then reset to the new threads PCB.  Finally, swapcontext() is used to save the currently running context to the pointer from the "old" current PCB (which remember was added into the PCB_tracker already), and set the current context to the one we just created, hence running the next thread.  Eventually, the thread that called t_create() will be run again and execute the final return of the ID of the new thread that was created.  
+
+III.	Switching.
+
+	The t_yield() function is very similar to t_create().  The difference is that instead of switching to a newly created thread, a PCB is pulled from the ready queue (pcb_ready), and the current thread is put onto the pcb_ready tracker and the two contexts are swapped.  
+	Once again, the library is checked for initialization, and if it passes that check, it uses the pcb_ready->get_next() (which contains the scheduling) to return a pointer to the next thread.  A pointer to the current context is kept, and the current PCB is again pushed onto the ready queue.  We had to get the next PCB before adding the current to the tracker, so that we can be assured of switching to a new thread instead of getting the same PCB.  Once again, like with t_create, we use the swapcontext() function to save the currently running context to a pointer from the "old" current PCB (which was added into the PCB_tracker already), and set the current context to the one we just created, hence running the next thread.  
+
+IV.	Termination
+
+	In order to terminate a thread that is running, we call t_terminate().  The function does several checks to make sure that the operation is allowed.  First it must check to see of the library is initialized.  If this check passes, it then checks the pcb_ready queue to see if it is empty.  After these checks have passed, it then deletes the current thread's data, and then the thread itself.  The get_next() function is used to retrieve the next thread's PCB.  The setcontext() function is then called to set the context to the new current thread.  If for some reason there should be an error, the function returns a 0, but this should never be reached due to the setcontext().
+
+V.	Shutdown
+
+	The t_shutdown() function is assumed to close out the thread library from the same thread which initialized it.  It tests this by comparing the id stored in the currently running threads PCB to the global variable main_id.  If it is the 'main' thread, it calls the PCB_tracker's clear_all functions for pcb_ready, which deletes all the elements from the tracker.  Then it deletes the current thread's PCB, sets the two global pointers to NULL, disables the alarm interrupt, and returns to the calling thread.
+
+Semaphores
+
+	The four semaphore functions are an extension of the thread library.  They all test to check that the thread library has been initialized and use the same PCB_tracker (pcb_ready) if they need to switch to another thread due to a wait or signal.  The semaphore structure sem_t contains a blocked queue and an integer for the number of pending signals.  The blocked queue is another PCB_tracker, and just like the pcb_ready queue, uses the round robin scheduling found in get_next().
+	The sem_init() function simply sets the pending signals of the sempahore to its initial count, which is passed into the function.  
+	The sem_destroy() function calls the clear_all() for the blocked queue to restore any allocated memory.  
+	The sem_wait() function decrements the pending signals of its respective semaphore and tests to see if the thread must wait or not.  If the pending signals value is less than zero, the thread must wait, and is put onto the semaphore's blocked queue, and another thread is taken from the ready queue and allowed to run, which is accomplished by another swapcontext(), just as in a t_yield().
+	The sem_signal() function increments the semaphore's pending signals value, and checks if it is less than or equal to zero.  If it is, it saves the current PCB onto pcb_ready, and dequeues a blocked PCB from the semaphore's blocked queue.  The context is again switched, just as in t_yield() using swapcontext(), and the once blocked thread is now allowed to have the CPU's attention.  
+
+VI.	Other
+
+Error handling
+	One of the extra functions within our implementation was the t_error( ) function.  It has been mentioned that all of the thread library functions, including those of the semaphores, test the pointer pcb_ready to verify if the library has or has not been initialized yet.  What hasn't been mentioned is what happens if that test fails.  This is the purpose of the t_error() function.  It takes a string as it's only argument and prints to the screen that there was an error, and the string describing it.  It then exits the program using the function exit().
+
+Interrupts  
+	Although the PCB_tracker contains some scheduling code within get_next(), more is needed to accomplish the pre-emptive portion of the round-robin setup.  In the function t_init(), the function sigset( SIGALRM ) was used to allow the program to receive alarm interrupts.  But to start the alarm, the function alarm() must be called with the number of seconds until the interrupt as it's parameter.  All of the thread and semaphore functions start and end with a call to disable() and enable() respectively.  The enable function starts the alarm and the disable stops it.  This is easily done by setting the alarm to either one or zero.  This was a large assumption made on our part to only block the alarm interrupts, because the only interrupt we will get in our program would be our alarm. 	Any other interrupt is expected to at least attempt to exit the program.  Also, we attpempted to use the sigmask() and sigblock() functions to disable the alarm interrupts.  However, in our own test program, we could not get any of those functions to actually block the alarm interrupt.
+	The cntrl-C was added to exit from the program more 'peacefully' than suspending the program.  It accomplishes this by checking on the status of the thread library and exiting, calling t_terminate(), or calling t_shutdown(), depending on the status of the library and what thread was interrupted.  
+	The alarm interrupt simply calls t_yield().  Both interrupts are set with the function signal_handler as the function that is to be called in the event of the interrupt.  This function contains a switch statement for further expansion.
+
+JFS_Queue
+	This simple queue class was written to hold PCB pointers.  It has a simple enqueue(), dequeue(), get_size(), and is_empty() interface.  It contains two pointers to q_nodes: a head and a tail, and a single integer called size.  It uses q_nodes to implement a linked list rather than an array version so that it could be expanded upon without reaching a definite limit to the number of nodes that could be kept in it.
+
+411_threads.h
+	The only change to this file was the addition of a sem_t declaration which was needed as such for the fourth test file.  The compiler gave errors if the structure was declared as 'struct sem_t;'   It required a little more substance.  And since the pcb_tracker wasn't defined there for the blocked portion, a void pointer was used.
+
+VII.	Work Breakdown
+
+	The majority of the project was done as a team, and as such most everything was written by the two of us.  In other words, we cannot breakdown the work by who wrote what function.  Jason worked on most of the coding and debugging for the project and also helped write this paper.  Mike also worked on a majority of the project and debugging.  He typed most of this paper.

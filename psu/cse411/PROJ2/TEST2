@@ -1,0 +1,1009 @@
+Script started on Mon Mar 27 11:09:47 2000
+drakh 1% tp2
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  1
+ Size:  524288 		List[1]
+   used:  0 		  free:  0
+ Size:  262144 		List[2]
+   used:  0 		  free:  0
+ Size:  131072 		List[3]
+   used:  0 		  free:  0
+ Size:  65536 		List[4]
+   used:  0 		  free:  0
+ Size:  32768 		List[5]
+   used:  0 		  free:  0
+ Size:  16384 		List[6]
+   used:  0 		  free:  0
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  0 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  0
+ Size:  1024 		List[10]
+   used:  0 		  free:  0
+ Size:  512 		List[11]
+   used:  0 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 428e8, and large pointer is 438e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  1
+ Size:  8192 		List[7]
+   used:  0 		  free:  1
+ Size:  4096 		List[8]
+   used:  1 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  1
+ Size:  1024 		List[10]
+   used:  0 		  free:  1
+ Size:  512 		List[11]
+   used:  1 		  free:  1
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 42ae8, and large pointer is 448e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  1
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  2 		  free:  1
+ Size:  2048 		List[9]
+   used:  0 		  free:  1
+ Size:  1024 		List[10]
+   used:  0 		  free:  1
+ Size:  512 		List[11]
+   used:  2 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 42ce8, and large pointer is 458e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  1
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  3 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  1
+ Size:  1024 		List[10]
+   used:  0 		  free:  0
+ Size:  512 		List[11]
+   used:  3 		  free:  1
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 42ee8, and large pointer is 468e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  0
+ Size:  8192 		List[7]
+   used:  0 		  free:  1
+ Size:  4096 		List[8]
+   used:  4 		  free:  1
+ Size:  2048 		List[9]
+   used:  0 		  free:  1
+ Size:  1024 		List[10]
+   used:  0 		  free:  0
+ Size:  512 		List[11]
+   used:  4 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 430e8, and large pointer is 478e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  0
+ Size:  8192 		List[7]
+   used:  0 		  free:  1
+ Size:  4096 		List[8]
+   used:  5 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  0
+ Size:  1024 		List[10]
+   used:  0 		  free:  1
+ Size:  512 		List[11]
+   used:  5 		  free:  1
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 432e8, and large pointer is 488e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  0
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  6 		  free:  1
+ Size:  2048 		List[9]
+   used:  0 		  free:  0
+ Size:  1024 		List[10]
+   used:  0 		  free:  1
+ Size:  512 		List[11]
+   used:  6 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 434e8, and large pointer is 498e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  1
+ Size:  16384 		List[6]
+   used:  0 		  free:  0
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  7 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  0
+ Size:  1024 		List[10]
+   used:  0 		  free:  0
+ Size:  512 		List[11]
+   used:  7 		  free:  1
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 436e8, and large pointer is 4a8e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  0
+ Size:  16384 		List[6]
+   used:  0 		  free:  1
+ Size:  8192 		List[7]
+   used:  0 		  free:  1
+ Size:  4096 		List[8]
+   used:  8 		  free:  1
+ Size:  2048 		List[9]
+   used:  0 		  free:  0
+ Size:  1024 		List[10]
+   used:  0 		  free:  0
+ Size:  512 		List[11]
+   used:  8 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 4b8e8, and large pointer is 4c8e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  0
+ Size:  16384 		List[6]
+   used:  0 		  free:  1
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  9 		  free:  1
+ Size:  2048 		List[9]
+   used:  0 		  free:  1
+ Size:  1024 		List[10]
+   used:  0 		  free:  1
+ Size:  512 		List[11]
+   used:  9 		  free:  1
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+The buffer small pointers is 4bae8, and large pointer is 4d8e8
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  0
+ Size:  524288 		List[1]
+   used:  0 		  free:  1
+ Size:  262144 		List[2]
+   used:  0 		  free:  1
+ Size:  131072 		List[3]
+   used:  0 		  free:  1
+ Size:  65536 		List[4]
+   used:  0 		  free:  1
+ Size:  32768 		List[5]
+   used:  0 		  free:  0
+ Size:  16384 		List[6]
+   used:  0 		  free:  1
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  10 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  1
+ Size:  1024 		List[10]
+   used:  0 		  free:  1
+ Size:  512 		List[11]
+   used:  10 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+Writing to 0
+Writing to 1
+
+Reading from 1
+Writing to 0
+ Now Ref bit for VM page 0 is 135.
+ Now Ref bit for VM page 1 is 135.
+Writing to 2
+
+Reading from 2
+Writing to 0
+Writing to 3
+
+Reading from 3
+Writing to 0
+Writing to 4
+Victim page 1 in frame 1
+Writing page to disk...
+
+Reading from 4
+Writing to 0
+Writing to 5
+Victim page 2 in frame 2
+Writing page to disk...
+
+Reading from 5
+Writing to 0
+Writing to 6
+Victim page 3 in frame 3
+Writing page to disk...
+
+Reading from 6
+Writing to 0
+Writing to 7
+Victim page 4 in frame 1
+Writing page to disk...
+
+Reading from 7
+Writing to 0
+Writing to 8
+Victim page 5 in frame 2
+Writing page to disk...
+
+Reading from 8
+Writing to 9
+Victim page 6 in frame 3
+Writing page to disk...
+Writing to 10
+Victim page 9 in frame 3
+Writing page to disk...
+ Now Ref bit for VM page 0 is 135.
+ Now Ref bit for VM page 7 is 135.
+ Now Ref bit for VM page 8 is 135.
+ Now Ref bit for VM page 10 is 134.
+
+Reading from 10
+Writing to 9
+Victim page 0 in frame 0
+Writing page to disk...
+Writing to 11
+Victim page 7 in frame 1
+Writing page to disk...
+
+Reading from 11
+
+Reading from 0
+Victim page 8 in frame 2
+Writing page to disk...
+
+The first 10 characters of small buffer are AAAAAAAAAA
+Reading from 0
+
+The first 10 characters of small buffer are BBBBBBBBBB
+Reading from 0
+
+The first 10 characters of small buffer are CCCCCCCCCC
+Reading from 0
+
+The first 10 characters of small buffer are DDDDDDDDDD
+Reading from 0
+
+The first 10 characters of small buffer are EEEEEEEEEE
+Reading from 0
+
+The first 10 characters of small buffer are FFFFFFFFFF
+Reading from 0
+
+The first 10 characters of small buffer are GGGGGGGGGG
+Reading from 0
+
+The first 10 characters of small buffer are HHHHHHHHHH
+Reading from 9
+
+The first 10 characters of small buffer are IIIIIIIIII
+Reading from 9
+
+The first 10 characters of small buffer are JJJJJJJJJJ
+Reading from 1
+Victim page 10 in frame 3
+Writing page to disk...
+
+The first 10 characters of large buffer are AAAAAAAAAA
+Reading from 2
+Victim page 1 in frame 3
+
+ Replacing page 1 without writing to disk...
+
+
+The first 10 characters of large buffer are BBBBBBBBBB
+Reading from 3
+Victim page 2 in frame 3
+
+ Replacing page 2 without writing to disk...
+
+
+The first 10 characters of large buffer are CCCCCCCCCC
+Reading from 4
+ Now Ref bit for VM page 9 is 135.
+ Now Ref bit for VM page 11 is 135.
+ Now Ref bit for VM page 0 is 134.
+ Now Ref bit for VM page 3 is 134.
+Victim page 9 in frame 0
+Writing page to disk...
+
+The first 10 characters of large buffer are DDDDDDDDDD
+Reading from 5
+Victim page 11 in frame 1
+Writing page to disk...
+
+The first 10 characters of large buffer are EEEEEEEEEE
+Reading from 6
+Victim page 0 in frame 2
+Writing page to disk...
+
+The first 10 characters of large buffer are FFFFFFFFFF
+Reading from 7
+Victim page 3 in frame 3
+Writing page to disk...
+
+The first 10 characters of large buffer are GGGGGGGGGG
+Reading from 8
+Victim page 4 in frame 0
+
+ Replacing page 4 without writing to disk...
+
+
+The first 10 characters of large buffer are HHHHHHHHHH
+Reading from 10
+Victim page 5 in frame 1
+
+ Replacing page 5 without writing to disk...
+
+
+The first 10 characters of large buffer are IIIIIIIIII
+Reading from 11
+Victim page 6 in frame 2
+
+ Replacing page 6 without writing to disk...
+
+
+The first 10 characters of large buffer are JJJJJJJJJJ
+
+Reading from 11
+Writing to 1
+Victim page 7 in frame 3
+
+ Replacing page 7 without writing to disk...
+
+
+Reading from 11
+Writing to 2
+ Now Ref bit for VM page 8 is 134.
+ Now Ref bit for VM page 10 is 134.
+ Now Ref bit for VM page 11 is 134.
+ Now Ref bit for VM page 1 is 135.
+Victim page 8 in frame 0
+Writing page to disk...
+
+Reading from 9
+Victim page 10 in frame 1
+Writing page to disk...
+Writing to 0
+Victim page 11 in frame 2
+Writing page to disk...
+
+Reading from 9
+Writing to 0
+
+Reading from 0
+
+The first 10 characters of small buffer are JJJJJJJJJJ
+Reading from 0
+
+The first 10 characters of small buffer are BBBBBJJJBB
+Reading from 0
+
+The first 10 characters of small buffer are CCCCCCCCCC
+Reading from 0
+
+The first 10 characters of small buffer are DDDDDDDDDD
+Reading from 0
+
+The first 10 characters of small buffer are EEEEEEEEEE
+Reading from 0
+
+The first 10 characters of small buffer are FFFFFFFFFF
+Reading from 0
+
+The first 10 characters of small buffer are GGGGGGGGGG
+Reading from 0
+
+The first 10 characters of small buffer are HHHHHHHHHH
+Reading from 9
+
+The first 10 characters of small buffer are IIIIIIIIII
+Reading from 9
+
+The first 10 characters of small buffer are JJJJJJJJJJ
+Reading from 1
+
+The first 10 characters of large buffer are JJJJJJJJJJ
+Reading from 2
+
+The first 10 characters of large buffer are BBBBBJJJBB
+Reading from 3
+Victim page 1 in frame 3
+Writing page to disk...
+
+The first 10 characters of large buffer are CCCCCCCCCC
+Reading from 4
+Victim page 3 in frame 3
+
+ Replacing page 3 without writing to disk...
+
+ Now Ref bit for VM page 2 is 135.
+ Now Ref bit for VM page 9 is 134.
+ Now Ref bit for VM page 0 is 135.
+ Now Ref bit for VM page 4 is 134.
+
+The first 10 characters of large buffer are DDDDDDDDDD
+Reading from 5
+Victim page 2 in frame 0
+Writing page to disk...
+
+The first 10 characters of large buffer are EEEEEEEEEE
+Reading from 6
+Victim page 9 in frame 1
+Writing page to disk...
+
+The first 10 characters of large buffer are FFFFFFFFFF
+Reading from 7
+Victim page 0 in frame 2
+Writing page to disk...
+
+The first 10 characters of large buffer are GGGGGGGGGG
+Reading from 8
+Victim page 4 in frame 3
+Writing page to disk...
+
+The first 10 characters of large buffer are HHHHHHHHHH
+Reading from 10
+Victim page 5 in frame 0
+
+ Replacing page 5 without writing to disk...
+
+
+The first 10 characters of large buffer are IIIIIIIIII
+Reading from 11
+Victim page 6 in frame 1
+
+ Replacing page 6 without writing to disk...
+
+
+The first 10 characters of large buffer are JJJJJJJJJJ
+Writing to 0
+Victim page 7 in frame 2
+
+ Replacing page 7 without writing to disk...
+
+
+Reading from 0
+Writing to 1
+Victim page 8 in frame 3
+
+ Replacing page 8 without writing to disk...
+
+Writing to 0
+
+Reading from 0
+Writing to 2
+Victim page 10 in frame 0
+
+ Replacing page 10 without writing to disk...
+
+ Now Ref bit for VM page 2 is 134.
+ Now Ref bit for VM page 11 is 134.
+ Now Ref bit for VM page 0 is 135.
+ Now Ref bit for VM page 1 is 135.
+Writing to 0
+
+Reading from 0
+Writing to 3
+Victim page 11 in frame 1
+Writing page to disk...
+Writing to 0
+
+Reading from 0
+Writing to 4
+Victim page 1 in frame 3
+Writing page to disk...
+Writing to 0
+
+Reading from 0
+Writing to 5
+Victim page 2 in frame 0
+Writing page to disk...
+Writing to 0
+
+Reading from 0
+Writing to 6
+Victim page 3 in frame 1
+Writing page to disk...
+Writing to 0
+
+Reading from 0
+Writing to 7
+Victim page 4 in frame 3
+Writing page to disk...
+Writing to 0
+
+Reading from 0
+Writing to 8
+Victim page 5 in frame 0
+Writing page to disk...
+Writing to 9
+Victim page 6 in frame 1
+Writing page to disk...
+ Now Ref bit for VM page 8 is 135.
+ Now Ref bit for VM page 9 is 134.
+ Now Ref bit for VM page 0 is 135.
+ Now Ref bit for VM page 7 is 135.
+
+Reading from 9
+Writing to 10
+Victim page 0 in frame 2
+Writing page to disk...
+Writing to 9
+
+Reading from 9
+Writing to 11
+Victim page 7 in frame 3
+Writing page to disk...
+
+Reading from 0
+Victim page 8 in frame 0
+Writing page to disk...
+
+The first 10 characters of small buffer are JJJJJZZZZZ
+Reading from 0
+
+The first 10 characters of small buffer are BBBBBYYYYY
+Reading from 0
+
+The first 10 characters of small buffer are CCCCCXXXXX
+Reading from 0
+
+The first 10 characters of small buffer are DDDDDWWWWW
+Reading from 0
+
+The first 10 characters of small buffer are EEEEEVVVVV
+Reading from 0
+
+The first 10 characters of small buffer are FFFFFUUUUU
+Reading from 0
+
+The first 10 characters of small buffer are GGGGGTTTTT
+Reading from 0
+
+The first 10 characters of small buffer are HHHHHSSSSS
+Reading from 9
+
+The first 10 characters of small buffer are IIIIIRRRRR
+Reading from 9
+
+The first 10 characters of small buffer are JJJJJQQQQQ
+Reading from 1
+Victim page 10 in frame 2
+Writing page to disk...
+
+The first 10 characters of large buffer are JJJJJJJJJJ
+Reading from 2
+Victim page 11 in frame 3
+Writing page to disk...
+
+The first 10 characters of large buffer are BBBBBBBBBB
+Reading from 3
+Victim page 1 in frame 2
+
+ Replacing page 1 without writing to disk...
+
+
+The first 10 characters of large buffer are CCCCCCCCCC
+Reading from 4
+Victim page 2 in frame 3
+
+ Replacing page 2 without writing to disk...
+
+
+The first 10 characters of large buffer are DDDDDDDDDD
+Reading from 5
+Victim page 3 in frame 2
+
+ Replacing page 3 without writing to disk...
+
+
+The first 10 characters of large buffer are EEEEEEEEEE
+Reading from 6
+Victim page 4 in frame 3
+
+ Replacing page 4 without writing to disk...
+
+
+The first 10 characters of large buffer are FFFFFFFFFF
+Reading from 7
+Victim page 5 in frame 2
+
+ Replacing page 5 without writing to disk...
+
+
+The first 10 characters of large buffer are GGGGGGGGGG
+Reading from 8
+Victim page 6 in frame 3
+
+ Replacing page 6 without writing to disk...
+
+
+The first 10 characters of large buffer are HHHHHHHHHH
+Reading from 10
+Victim page 7 in frame 2
+
+ Replacing page 7 without writing to disk...
+
+
+The first 10 characters of large buffer are IIIIIIIIII
+Reading from 11
+Victim page 8 in frame 3
+
+ Replacing page 8 without writing to disk...
+
+
+The first 10 characters of large buffer are JJJJJJJJJJ
+
+
+   ***** Memory System Dump *****
+ Size:  1.04858e+06 		List[0]
+   used:  0 		  free:  1
+ Size:  524288 		List[1]
+   used:  0 		  free:  0
+ Size:  262144 		List[2]
+   used:  0 		  free:  0
+ Size:  131072 		List[3]
+   used:  0 		  free:  0
+ Size:  65536 		List[4]
+   used:  0 		  free:  0
+ Size:  32768 		List[5]
+   used:  0 		  free:  0
+ Size:  16384 		List[6]
+   used:  0 		  free:  0
+ Size:  8192 		List[7]
+   used:  0 		  free:  0
+ Size:  4096 		List[8]
+   used:  0 		  free:  0
+ Size:  2048 		List[9]
+   used:  0 		  free:  0
+ Size:  1024 		List[10]
+   used:  0 		  free:  0
+ Size:  512 		List[11]
+   used:  0 		  free:  0
+ Size:  256 		List[12]
+   used:  0 		  free:  0
+ Size:  128 		List[13]
+   used:  0 		  free:  0
+ Size:  64 		List[14]
+   used:  0 		  free:  0
+ Size:  32 		List[15]
+   used:  0 		  free:  0
+ Size:  16 		List[16]
+   used:  0 		  free:  0
+ Size:  8 		List[17]
+   used:  0 		  free:  0
+ Size:  4 		List[18]
+   used:  0 		  free:  0
+ Size:  2 		List[19]
+   used:  0 		  free:  0
+ Size:  1 		List[20]
+   used:  0 		  free:  0
+ Now Ref bit for VM page 0 is 134.
+ Now Ref bit for VM page 9 is 135.
+ Now Ref bit for VM page 10 is 134.
+ Now Ref bit for VM page 11 is 134.
+drakh 2% exit
+script done on Mon Mar 27 11:09:50 2000
